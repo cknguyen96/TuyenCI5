@@ -167,24 +167,8 @@ public class GameWindow extends Frame implements Runnable {
         this.bufferedImage = new BufferedImage(600, 800, BufferedImage.TYPE_INT_ARGB);
         this.bufferedImageGraphic = bufferedImage.getGraphics();
         Thread thread = new Thread(this);
-        Thread planeEnemyThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    try{
-                        Thread.sleep(500);
-                        Enemy enemyx = new Enemy(new Random().nextInt(600), 0);
-                        enemyVector.add(enemyx);
-                    }
-                    catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        });
         thread.start();
-        planeEnemyThread.start();
+
     }
 
     @Override
@@ -196,39 +180,38 @@ public class GameWindow extends Frame implements Runnable {
         for (Bullet bullet : bulletVector) {
             bufferedImageGraphic.drawImage(bulletImage, bullet.x, bullet.y, null);
 
-        }
-        for (int i = 0; i < enemyVector.size(); i++) {
-            Enemy enemy = enemyVector.get(i);
-            bufferedImageGraphic.drawImage(enemyImage, enemyVector.get(i).x, enemyVector.get(i).y, null);
-        }
+         }
+       for (int i = 0; i < enemyVector.size(); i++) {
+        Enemy enemy = enemyVector.get(i);
+           bufferedImageGraphic.drawImage(enemyImage, enemyVector.get(i).x, enemyVector.get(i).y, null);
+     }
         g.drawImage(bufferedImage, 0, 0, null);
 
     }
 
     @Override
-    public void run() {
+       public void run() {
         while (true) {
-
             try {
-                Thread.sleep(27);
 
-                Iterator<Enemy> enemyIterator = enemyVector.iterator();
-                Iterator<Bullet> bulletIterator = bulletVector.iterator();
-                while (bulletIterator.hasNext()) {
-                    Bullet bullet = bulletIterator.next();
-                    bullet.y -= 10;
-                    if (bullet.y <= 0) {
-                        bulletIterator.remove();
-                    }
-                }
+                    Enemy enemy = new Enemy();
+                 enemy.moveEnemy(enemy.x, enemy.y);
+                  Thread.sleep(50);
+                    enemyVector.add(enemy);
+
+
+                    Iterator<Enemy> enemyIterator = enemyVector.iterator();
+                    Iterator<Bullet> bulletIterator = bulletIterator.iterator();
+
                 while( enemyIterator.hasNext()) {
-                    Enemy enemy = enemyIterator.next();
+//               Enemy enemy = enemyIterator.next(); // trùng biến enemy có rồi, ko được khai báo lại "is already defined"
+                    enemy = enemyIterator.next();
                     enemy.y += 10;
-                    if (enemy.y >= 800) {
+                    if (enemy.y > 650) {
                         enemyIterator.remove();
                     }
                     Rectangle enemyRectangle = new Rectangle(enemy.x, enemy.y, enemyImage.getWidth(null), enemyImage.getHeight(null));
-                    bulletIterator = bulletVector.iterator();
+
                     while (bulletIterator.hasNext()) {
                         Bullet bullet = bulletIterator.next();
                         Rectangle bulletRectangle = new Rectangle(bullet.x, bullet.y, bulletImage.getWidth(null), bulletImage.getHeight(null));
@@ -239,11 +222,21 @@ public class GameWindow extends Frame implements Runnable {
                         }
                     }
                 }
+           //     Iterator<Bullet> bulletIterator = bulletVector.iterator();
+                while (bulletIterator.hasNext()) {
+                    Bullet bullet = bulletIterator.next();
+                    bullet.y -= 10;
+                    if (bullet.y <= 0) {
+                        bulletIterator.remove();
+                    }
+                }
                 repaint();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
+
     }
 }
 // delete mouse: java avt mouse visible.
