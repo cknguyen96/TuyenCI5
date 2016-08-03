@@ -3,13 +3,12 @@ package models;
 /**
  * Created by PhamTuyen on 7/28/2016.
  */
-public class Bullet {
-    public int x;
-    public int y;
-    int dx;
-    int dy;
-    public  void moveTo(int x , int y){
-        this.x = x ;
-        this.y = y;
+public class Bullet extends GameObject {
+
+    public final static int WIDTH = 13;
+    public final static int HEIGHT = 30;
+
+    public Bullet(int x, int y) {
+        super(x, y, WIDTH, HEIGHT);
     }
 }
